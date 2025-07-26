@@ -21,8 +21,6 @@ public class AWSConfig {
     @Bean
     public S3Client s3Client(){
 
-        System.out.println(accessKey);
-        System.out.println(secretKey);
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
