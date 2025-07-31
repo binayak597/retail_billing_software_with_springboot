@@ -16,13 +16,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/categories")
-@CrossOrigin("*")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/admin/categories")
     public ResponseEntity<CategoryResponse> addCategory(@RequestPart("category") String categoryString, @RequestPart("file") MultipartFile file){
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -41,7 +39,7 @@ public class CategoryController {
 
     }
 
-    @GetMapping
+    @GetMapping("/categories")
     public ResponseEntity<List<CategoryResponse>> fetchCategories(){
 
         List<CategoryResponse> data = categoryService.read();
@@ -49,7 +47,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<Void> remove(@PathVariable String categoryId){
 
         try{
