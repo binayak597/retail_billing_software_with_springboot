@@ -3,6 +3,7 @@ package com.rbs.retail.billing.impls;
 import com.rbs.retail.billing.dto.CategoryDto;
 import com.rbs.retail.billing.entities.CategoryEntity;
 import com.rbs.retail.billing.repositories.CategoryRepository;
+import com.rbs.retail.billing.repositories.ItemRespository;
 import com.rbs.retail.billing.response.CategoryResponse;
 import com.rbs.retail.billing.services.CategoryService;
 import com.rbs.retail.billing.services.FileUploadService;
@@ -20,6 +21,7 @@ public class CategoryServiceImpls implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final FileUploadService fileUploadService;
+    private final ItemRespository itemRespository;
 
     @Override
     public CategoryResponse add(CategoryDto request, MultipartFile file) {
@@ -56,6 +58,8 @@ public class CategoryServiceImpls implements CategoryService {
 
     private CategoryResponse convertToResponse(CategoryEntity newCategory) {
 
+        Integer itemsCount = itemRespository.countByCategoryId(newCategory.getId());
+
         return CategoryResponse.builder()
                 .categoryId(newCategory.getCategoryId())
                 .name(newCategory.getName())
@@ -64,6 +68,7 @@ public class CategoryServiceImpls implements CategoryService {
                 .imgUrl(newCategory.getImgUrl())
                 .createdAt(newCategory.getCreatedAt())
                 .updatedAt(newCategory.getUpdatedAt())
+                .items(itemsCount)
                 .build();
     }
 
