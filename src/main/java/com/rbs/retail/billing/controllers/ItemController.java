@@ -31,7 +31,6 @@ public class ItemController {
 
             ItemResponse response = itemService.add(itemRequest, file);
 
-            System.out.println(response.toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error occured while parsing the json data");
