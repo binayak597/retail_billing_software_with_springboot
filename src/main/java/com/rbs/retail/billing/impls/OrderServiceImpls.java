@@ -2,6 +2,7 @@ package com.rbs.retail.billing.impls;
 
 import com.rbs.retail.billing.dto.OrderDto;
 import com.rbs.retail.billing.dto.PaymentMethod;
+import com.rbs.retail.billing.dto.PaymentVerificationDto;
 import com.rbs.retail.billing.entities.OrderEntity;
 import com.rbs.retail.billing.entities.OrderItemEntity;
 import com.rbs.retail.billing.entities.PaymentDetails;
@@ -113,5 +114,37 @@ public class OrderServiceImpls implements OrderService{
                 .stream()
                 .map(this::convertToOrderResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderResponse verifyPayment(PaymentVerificationDto request) {
+
+        OrderEntity existingOrder = orderRepository.findByOrderId(request.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if(!verifyRazorpaySignature(request.getRazorpayOrderId(),
+                request.getRazorpayPaymentId(), request.getRazorpaySignature())){
+
+            throw new RuntimeException("Payment verification failed");
+        }
+
+        PaymentDetails paymentDetails = existingOrder.getPaymentDetails();
+
+        paymentDetails.setRazorpayOrderId(request.getRazorpayOrderId());
+        paymentDetails.setRazorpayPaymentId(request.getRazorpayPaymentId());
+        paymentDetails.setRazorpaySignature(request.getRazorpaySignature());
+        paymentDetails.setStatus(PaymentDetails.PaymentStatus.COMPLETED);
+
+        existingOrder = orderRepository.save(existingOrder);
+
+        return convertToOrderResponse(existingOrder);
+    }
+
+    //TODO
+    //not recommended for production
+    //in production we need to many steps
+    private boolean verifyRazorpaySignature(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {
+
+        return true;
     }
 }
