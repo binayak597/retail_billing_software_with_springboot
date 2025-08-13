@@ -5,6 +5,7 @@ import com.rbs.retail.billing.impls.CustomUserDetailsService;
 import com.rbs.retail.billing.response.AuthResponse;
 import com.rbs.retail.billing.services.UserService;
 import com.rbs.retail.billing.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+    @SecurityRequirements
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthDto request) throws Exception {
 
@@ -65,6 +67,7 @@ public class AuthController {
         }
     }
 
+    @SecurityRequirements
     @PostMapping("/encode")
     public String encodePassword(@RequestBody Map<String, String> request){
 
