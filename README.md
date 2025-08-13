@@ -33,7 +33,7 @@ Supports **role-based access (USER & ADMIN)**, **JWT authentication**, **file up
 
 ### **1️⃣ Clone the repository**
 ```bash
-git clone https://github.com/binayak597/retail-billing-backend.git
+git clone https://github.com/binayak597/retail_billing_software_with_springboot.git
 cd retail-billing-backend
 ```
 
