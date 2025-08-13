@@ -10,4 +10,5 @@ ENV DB_SSL_CA_PATH=/app/ca.pem
 EXPOSE 5454
 
 # Create ca.pem from the CA_CERT env var at runtime, then run the jar
-ENTRYPOINT ["/bin/sh", "-c", "echo \"$CA_CERT\" > $DB_SSL_CA_PATH && java -jar app.jar"]
+ENTRYPOINT ["/bin/sh", "-c", "printf \"%s\" \"$CA_CERT\" > $DB_SSL_CA_PATH && java -jar app.jar"]
+
