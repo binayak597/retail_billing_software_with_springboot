@@ -11,8 +11,10 @@ import com.rbs.retail.billing.response.OrderResponse;
 import com.rbs.retail.billing.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,6 +140,24 @@ public class OrderServiceImpls implements OrderService{
         existingOrder = orderRepository.save(existingOrder);
 
         return convertToOrderResponse(existingOrder);
+    }
+
+    @Override
+    public Double sumSalesByDate(LocalDate date) {
+        return orderRepository.sumSalesByDate(date);
+    }
+
+    @Override
+    public Long countByOrderDate(LocalDate date) {
+        return orderRepository.countByOrderData(date);
+    }
+
+    @Override
+    public List<OrderResponse> findRecentOrders() {
+        return orderRepository.findRecentOrders(PageRequest.of(0, 5))
+                .stream()
+                .map(orderEntity -> convertToOrderResponse(orderEntity))
+                .collect(Collectors.toList());
     }
 
     //TODO
