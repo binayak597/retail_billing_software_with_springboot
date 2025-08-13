@@ -9,8 +9,14 @@ import com.rbs.retail.billing.services.CategoryService;
 import com.rbs.retail.billing.services.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,9 +30,21 @@ public class CategoryServiceImpls implements CategoryService {
     private final ItemRespository itemRespository;
 
     @Override
-    public CategoryResponse add(CategoryDto request, MultipartFile file) {
+    public CategoryResponse add(CategoryDto request, MultipartFile file) throws IOException {
 
-        String imgUrl = fileUploadService.uploadFile(file);
+//        String imgUrl = fileUploadService.uploadFile(file);
+
+        String fileName = UUID.randomUUID().toString() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
+
+        Path uploadPath = Paths.get("uploads").toAbsolutePath().normalize();
+
+        Files.createDirectories(uploadPath);
+
+        Path targetLocation = uploadPath.resolve(fileName);
+
+        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+        String imgUrl = "http://localhost:5454/api/v1.0/uploads/" + fileName;
 
         CategoryEntity newCategory = covertToEntity(request);
 
@@ -51,8 +69,25 @@ public class CategoryServiceImpls implements CategoryService {
         CategoryEntity exisitingCategory = categoryRepository.findByCategoryId(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryId));
 
-        fileUploadService.deleteFile(exisitingCategory.getImgUrl());
-        categoryRepository.delete(exisitingCategory);
+//        fileUploadService.deleteFile(exisitingCategory.getImgUrl());
+
+        String imgUrl = exisitingCategory.getImgUrl();
+
+        String fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+
+        Path uploadPath = Paths.get("uploads").toAbsolutePath().normalize();
+
+        Path filePath = uploadPath.resolve(fileName);
+
+        try{
+
+            Files.deleteIfExists(filePath);
+            categoryRepository.delete(exisitingCategory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        categoryRepository.delete(exisitingCategory);
 
     }
 

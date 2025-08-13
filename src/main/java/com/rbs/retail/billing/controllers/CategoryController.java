@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/admin/categories")
-    public ResponseEntity<CategoryResponse> addCategory(@RequestPart("category") String categoryString, @RequestPart("file") MultipartFile file){
+    public ResponseEntity<CategoryResponse> addCategory(@RequestPart("category") String categoryString, @RequestPart("file") MultipartFile file) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         CategoryDto request = null;

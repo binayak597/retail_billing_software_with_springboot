@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class ItemController {
     @PostMapping("/admin/items")
     public ResponseEntity<ItemResponse> addItem(@RequestPart("item") String itemString,
 
-                                                @RequestPart("file") MultipartFile file){
+                                                @RequestPart("file") MultipartFile file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ItemDto itemRequest = null;
         try{

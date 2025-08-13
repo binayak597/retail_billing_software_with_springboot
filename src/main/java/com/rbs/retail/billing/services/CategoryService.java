@@ -4,11 +4,12 @@ import com.rbs.retail.billing.dto.CategoryDto;
 import com.rbs.retail.billing.response.CategoryResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CategoryService {
 
-    CategoryResponse add(CategoryDto request, MultipartFile file);
+    CategoryResponse add(CategoryDto request, MultipartFile file) throws IOException;
     List<CategoryResponse> read();
     void delete(String categoryId);
 }
